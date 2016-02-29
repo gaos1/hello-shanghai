@@ -1,0 +1,9 @@
+
+---
+applications:
+  - name: hello-shanghai
+    buildpack: java_buildpack
+    memory: 512M
+    path: target/hello-shanghai-0.0.1-SNAPSHOT.jar
+    services:
+      - mysql
