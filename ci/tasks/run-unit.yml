@@ -1,0 +1,8 @@
+---
+platform: linux
+image: docker:///dummy/spring-boot-app-ci
+inputs:
+  - name: app_repo
+
+run:
+  path: app_repo/ci/tasks/run-unit.sh

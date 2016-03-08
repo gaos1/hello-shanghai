@@ -1,0 +1,58 @@
+---
+groups:
+- name: hello-shanghai:release
+  jobs:
+   - app-unit-test
+   - deploy-staging
+   - deploy-production
+
+jobs:
+- name: app-unit-test
+  plan:
+    - get: app_repo
+      trigger: true
+    - task: run-unit
+      file: app_repo/ci/tasks/run-unit.yml
+
+- name: deploy-staging
+  plan:
+  - aggregate:
+    - { trigger: true, passed: [app-unit-test], get: app_repo }
+  - put: cf-staging
+    params:
+      manifest: manifest.yml
+      path:  app_repo
+
+- name: deploy-production
+  plan:
+  - aggregate:
+    - { trigger: true, passed: [deploy-staging], get: app_repo }
+  - put: cf-production
+    params:
+      manifest: manifest.yml
+      path: app_repo
+
+resources:
+- name: app_repo
+  type: git
+  source:
+    uri: https://github.com/gaos1/hello-shanghai.git
+    branch: master
+
+- name: cf-staging
+  type: cf
+  source:
+    api: {{staging_api}}
+    username: {{staging_username}}
+    password: {{staging_password}}
+    organization: {{staging_organization}}
+    space: {{staging_space}}
+
+- name: cf-production
+  type: cf
+  source:
+    api: {{production_api}}
+    username: {{production_username}}
+    password: {{production_password}}
+    organization: {{production_organization}}
+    space: {{production_space}}

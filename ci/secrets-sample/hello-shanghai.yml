@@ -1,0 +1,16 @@
+---
+
+# secrets for cf env
+production_username:
+production_api:
+production_password:
+production_organization:
+production_space:
+production_app_domain:
+
+staging_api:
+staging_username:
+staging_password:
+staging_organization:
+staging_space:
+staging_app_domain:
